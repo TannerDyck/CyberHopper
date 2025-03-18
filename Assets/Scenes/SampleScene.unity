@@ -1659,6 +1659,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65ecec6112567be49a616b206b6d5915, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  idleSprite: {fileID: 21300000, guid: accdfca821fcfad4aa0e79fe4138f7df, type: 3}
+  leapSprite: {fileID: 21300000, guid: c032d92b984378d4ebe60f300734cb08, type: 3}
 --- !u!50 &1134451882
 Rigidbody2D:
   serializedVersion: 5

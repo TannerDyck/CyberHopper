@@ -1,7 +1,18 @@
+using System.Collections;
 using UnityEngine;
 
 public class Frogger : MonoBehaviour
 {
+    private SpriteRenderer spriteRenderer;
+    public Sprite idleSprite;
+    public Sprite leapSprite;
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
@@ -28,6 +39,27 @@ public class Frogger : MonoBehaviour
 
     private void Move(Vector3 direction)
     {
-        transform.position += direction;
+        Vector3 destination = transform.position + direction;
+        StartCoroutine(Leap(destination));
+    }
+
+    private IEnumerator Leap(Vector3 destination)
+    {
+        Vector3 startPosition = transform.position;
+        float elapsed = 0f;
+        float duration = 0.125f;
+
+        spriteRenderer.sprite = leapSprite;
+
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            transform.position = Vector3.Lerp(startPosition, destination, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = destination;
+
+        spriteRenderer.sprite = idleSprite;
     }
 }
