@@ -9,12 +9,14 @@ public class Frogger : MonoBehaviour
     public Sprite deathSprite;
     private Vector3 spawnPosition;
     private bool isLeaping;
+    private Rigidbody2D rb;
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spawnPosition = transform.position;
         isLeaping = false;
+        rb = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
@@ -53,6 +55,11 @@ public class Frogger : MonoBehaviour
 
         if (barrier != null)
         {
+            if (transform.parent != null)
+            {
+                transform.SetParent(null);
+                Death();
+            }
             return;
         }
 
@@ -80,6 +87,17 @@ public class Frogger : MonoBehaviour
     {
         isLeaping = true;
         Vector3 startPosition = transform.position;
+        Vector3 roundedDestination;
+
+        if (transform.parent != null) // If Frogger is on a platform
+        {
+            roundedDestination = new Vector3(destination.x, Mathf.Round(destination.y), destination.z);
+        }
+        else // If Frogger is not on a platform
+        {
+            roundedDestination = new Vector3(Mathf.Round(destination.x), Mathf.Round(destination.y), destination.z);
+        }
+
         float elapsed = 0f;
         float duration = 0.125f;
 
@@ -88,12 +106,12 @@ public class Frogger : MonoBehaviour
         while (elapsed < duration)
         {
             float t = elapsed / duration;
-            transform.position = Vector3.Lerp(startPosition, destination, t);
+            transform.position = Vector3.Lerp(startPosition, roundedDestination, t);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        transform.position = destination;
+        transform.position = roundedDestination;
         spriteRenderer.sprite = idleSprite;
         isLeaping = false;
     }
@@ -106,6 +124,9 @@ public class Frogger : MonoBehaviour
         transform.rotation = Quaternion.identity;
         spriteRenderer.sprite = deathSprite;
         enabled = false;
+
+        rb.linearVelocity = Vector2.zero;
+        transform.SetParent(null);
 
         Invoke(nameof(Respawn), 1f);
     }
@@ -123,7 +144,7 @@ public class Frogger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (enabled && other.gameObject.layer == LayerMask.NameToLayer("Obstacle") && transform.parent == null)
+        if (enabled && other.gameObject.layer == LayerMask.NameToLayer("Barrier") && transform.parent != null)
         {
             Death();
         }
