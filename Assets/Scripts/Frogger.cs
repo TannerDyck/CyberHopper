@@ -80,6 +80,7 @@ public class Frogger : MonoBehaviour
     {
         isLeaping = true;
         Vector3 startPosition = transform.position;
+        Vector3 roundedDestination = new Vector3(Mathf.Round(destination.x), Mathf.Round(destination.y), destination.z);
         float elapsed = 0f;
         float duration = 0.125f;
 
@@ -88,12 +89,12 @@ public class Frogger : MonoBehaviour
         while (elapsed < duration)
         {
             float t = elapsed / duration;
-            transform.position = Vector3.Lerp(startPosition, destination, t);
+            transform.position = Vector3.Lerp(startPosition, roundedDestination, t);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        transform.position = destination;
+        transform.position = roundedDestination;
         spriteRenderer.sprite = idleSprite;
         isLeaping = false;
     }
