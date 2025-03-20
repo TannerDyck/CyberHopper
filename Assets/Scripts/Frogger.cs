@@ -3,20 +3,21 @@ using UnityEngine;
 
 public class Frogger : MonoBehaviour
 {
+    private Rigidbody2D frogger;
+    private Vector3 spawnPosition;
+    private bool isLeaping;
+
     private SpriteRenderer spriteRenderer;
     public Sprite idleSprite;
     public Sprite leapSprite;
     public Sprite deathSprite;
-    private Vector3 spawnPosition;
-    private bool isLeaping;
-    private Rigidbody2D rb;
-
+    
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spawnPosition = transform.position;
         isLeaping = false;
-        rb = GetComponent<Rigidbody2D>();
+        frogger = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
@@ -125,7 +126,7 @@ public class Frogger : MonoBehaviour
         spriteRenderer.sprite = deathSprite;
         enabled = false;
 
-        rb.linearVelocity = Vector2.zero;
+        frogger.linearVelocity = Vector2.zero;
         transform.SetParent(null);
 
         Invoke(nameof(Respawn), 1f);
