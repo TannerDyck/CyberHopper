@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6148025804608858358}
   - component: {fileID: 2774530759076351348}
   - component: {fileID: 4419495446244036149}
+  - component: {fileID: 3381105333015821629}
   m_Layer: 0
   m_Name: Car3
   m_TagString: Untagged
@@ -134,3 +135,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &3381105333015821629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7975927114187448028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f5ed5f40d5457e47b83ba5737801508, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  direction: {x: -1, y: 0}
+  speed: 2
+  size: 1

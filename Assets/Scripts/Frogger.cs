@@ -12,7 +12,6 @@ public class Frogger : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
