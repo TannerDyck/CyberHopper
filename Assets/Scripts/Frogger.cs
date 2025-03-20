@@ -7,10 +7,12 @@ public class Frogger : MonoBehaviour
     public Sprite idleSprite;
     public Sprite leapSprite;
     public Sprite deathSprite;
+    private Vector3 spawnPosition;
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        spawnPosition = transform.position;
     }
 
     private void Update()
@@ -92,9 +94,23 @@ public class Frogger : MonoBehaviour
 
     private void Death() 
     {
+        StopAllCoroutines();
+
         transform.rotation = Quaternion.identity;
         spriteRenderer.sprite = deathSprite;
         enabled = false;
+
+        Invoke(nameof(Respawn), 1f);
+    }
+
+    private void Respawn()
+    {
+        StopAllCoroutines();
+
+        transform.rotation = Quaternion.identity;
+        transform.position = spawnPosition;
+        spriteRenderer.sprite = idleSprite;
+        enabled = true;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
