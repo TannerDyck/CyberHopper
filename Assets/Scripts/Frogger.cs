@@ -8,15 +8,19 @@ public class Frogger : MonoBehaviour
     public Sprite leapSprite;
     public Sprite deathSprite;
     private Vector3 spawnPosition;
+    private bool isLeaping;
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spawnPosition = transform.position;
+        isLeaping = false;
     }
 
     private void Update()
     {
+        if (isLeaping) return;
+
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
@@ -47,21 +51,21 @@ public class Frogger : MonoBehaviour
         Collider2D platform = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Platform"));
         Collider2D obstacle = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Obstacle"));
 
-        if (barrier != null) 
+        if (barrier != null)
         {
             return;
         }
-        
+
         if (platform != null)
         {
             transform.SetParent(platform.transform);
         }
-        else 
+        else
         {
             transform.SetParent(null);
         }
 
-        if (obstacle != null && platform == null) 
+        if (obstacle != null && platform == null)
         {
             transform.position = destination;
             Death();
@@ -74,6 +78,7 @@ public class Frogger : MonoBehaviour
 
     private IEnumerator Leap(Vector3 destination)
     {
+        isLeaping = true;
         Vector3 startPosition = transform.position;
         float elapsed = 0f;
         float duration = 0.125f;
@@ -90,11 +95,13 @@ public class Frogger : MonoBehaviour
 
         transform.position = destination;
         spriteRenderer.sprite = idleSprite;
+        isLeaping = false;
     }
 
-    private void Death() 
+    private void Death()
     {
         StopAllCoroutines();
+        isLeaping = false;
 
         transform.rotation = Quaternion.identity;
         spriteRenderer.sprite = deathSprite;
@@ -106,6 +113,7 @@ public class Frogger : MonoBehaviour
     private void Respawn()
     {
         StopAllCoroutines();
+        isLeaping = false;
 
         transform.rotation = Quaternion.identity;
         transform.position = spawnPosition;
@@ -115,7 +123,7 @@ public class Frogger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (enabled && other.gameObject.layer == LayerMask.NameToLayer("Obstacle") && transform.parent == null) 
+        if (enabled && other.gameObject.layer == LayerMask.NameToLayer("Obstacle") && transform.parent == null)
         {
             Death();
         }
