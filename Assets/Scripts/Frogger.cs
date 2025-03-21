@@ -12,12 +12,19 @@ public class Frogger : MonoBehaviour
     public Sprite leapSprite;
     public Sprite deathSprite;
 
+    // Invincibility variables
+    private bool isInvincible = false;
+    private float invincibilityDuration = 5f; // Duration in seconds
+    public Color invincibilityColor = new Color(1f, 1f, 0.5f, 0.8f); // Yellow tint
+    private Color originalColor;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spawnPosition = transform.position;
         isLeaping = false;
         frogger = GetComponent<Rigidbody2D>();
+        originalColor = spriteRenderer.color;
     }
 
     private void Update()
@@ -60,7 +67,15 @@ public class Frogger : MonoBehaviour
             if (transform.parent != null)
             {
                 transform.SetParent(null);
-                Death();
+                if (!isInvincible)
+                {
+                    Death();
+                }
+                else
+                {
+                    // Allow movement through barriers when invincible
+                    StartCoroutine(Leap(destination));
+                }
             }
             return;
         }
@@ -74,20 +89,25 @@ public class Frogger : MonoBehaviour
             transform.SetParent(null);
         }
 
-        if (obstacle != null && platform == null)
+        // Only die if not invincible
+        if (!isInvincible)
         {
-            transform.position = destination;
-            Death();
+            if (obstacle != null && platform == null)
+            {
+                transform.position = destination;
+                Death();
+                return;
+            }
+            else if (environment != null && platform == null)
+            {
+                transform.position = destination;
+                Death();
+                return;
+            }
         }
-        else if (environment != null && platform == null)
-        {
-            transform.position = destination;
-            Death();
-        }
-        else
-        {
-            StartCoroutine(Leap(destination));
-        }
+
+        // If we reach here, the move is valid or we're invincible
+        StartCoroutine(Leap(destination));
     }
 
     private IEnumerator Leap(Vector3 destination)
@@ -147,11 +167,20 @@ public class Frogger : MonoBehaviour
         transform.position = spawnPosition;
         spriteRenderer.sprite = idleSprite;
         enabled = true;
+
+        // Make sure invincibility is reset on respawn
+        if (isInvincible)
+        {
+            EndInvincibility();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!enabled) return;
+
+        // If invincible, don't die from collisions
+        if (isInvincible) return;
 
         if (other.gameObject.layer == LayerMask.NameToLayer("Barrier") && transform.parent != null)
         {
@@ -165,5 +194,64 @@ public class Frogger : MonoBehaviour
         {
             Death();
         }
+    }
+
+    // Method to make the frog invincible
+    public void ActivateInvincibility(float duration = 0f)
+    {
+        // Use default duration if none provided
+        if (duration <= 0f)
+        {
+            duration = invincibilityDuration;
+        }
+
+        // If already invincible, just reset the timer
+        if (isInvincible)
+        {
+            CancelInvoke(nameof(EndInvincibility));
+        }
+
+        isInvincible = true;
+
+        // Visual indicator for invincibility
+        spriteRenderer.color = invincibilityColor;
+
+        // Flash effect to show invincibility
+        StartCoroutine(FlashEffect(duration));
+
+        // Set timer to end invincibility
+        Invoke(nameof(EndInvincibility), duration);
+    }
+
+    private void EndInvincibility()
+    {
+        isInvincible = false;
+        StopCoroutine(nameof(FlashEffect));
+        spriteRenderer.color = originalColor;
+    }
+
+    // Create a flashing effect to indicate invincibility
+    private IEnumerator FlashEffect(float duration)
+    {
+        float endTime = Time.time + duration;
+        float flashRate = 0.2f; // How fast to flash
+
+        while (Time.time < endTime)
+        {
+            // Toggle between invincibility color and half-transparent
+            if (spriteRenderer.color.a > 0.5f)
+            {
+                spriteRenderer.color = new Color(invincibilityColor.r, invincibilityColor.g, invincibilityColor.b, 0.5f);
+            }
+            else
+            {
+                spriteRenderer.color = invincibilityColor;
+            }
+
+            yield return new WaitForSeconds(flashRate);
+        }
+
+        // Ensure color is reset at the end
+        spriteRenderer.color = originalColor;
     }
 }
