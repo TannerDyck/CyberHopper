@@ -1401,8 +1401,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_RenderShadows: 1
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
@@ -1660,8 +1660,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_ComponentVersion: 2
   m_LightType: 4
   m_BlendStyleIndex: 0
@@ -1824,6 +1824,72 @@ Transform:
   - {fileID: 1424947466}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &751800312 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1136101363554962704, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+  m_PrefabInstance: {fileID: 975317592}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &751800313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751800312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46f3349027c097d4abe543e9e7f33ba8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invincibilityDuration: 5
+  isInvincibilityPowerUp: 1
+  collectEffect: {fileID: 0}
+--- !u!61 &751800316
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751800312}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1001 &765372756
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2190,6 +2256,69 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1001 &975317592
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1136101363554962704, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+      propertyPath: m_Name
+      value: Powerup
+      objectReference: {fileID: 0}
+    - target: {fileID: 5187050698974769120, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5187050698974769120, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5187050698974769120, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5187050698974769120, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5187050698974769120, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5187050698974769120, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5187050698974769120, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5187050698974769120, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5187050698974769120, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5187050698974769120, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1136101363554962704, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 751800313}
+    - targetCorrespondingSourceObject: {fileID: 1136101363554962704, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 751800316}
+  m_SourcePrefab: {fileID: 100100000, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
 --- !u!1001 &978472847
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2602,11 +2731,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65ecec6112567be49a616b206b6d5915, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   idleSprite: {fileID: 21300000, guid: accdfca821fcfad4aa0e79fe4138f7df, type: 3}
   leapSprite: {fileID: 21300000, guid: c032d92b984378d4ebe60f300734cb08, type: 3}
   deathSprite: {fileID: 21300000, guid: 1695d102dbd9a5949a838586c2e47c81, type: 3}
+  invincibilityColor: {r: 1, g: 1, b: 0.5, a: 0.8}
 --- !u!50 &1134451882
 Rigidbody2D:
   serializedVersion: 5
@@ -4777,3 +4907,4 @@ SceneRoots:
   - {fileID: 1694655415}
   - {fileID: 1208047740}
   - {fileID: 1174438811}
+  - {fileID: 975317592}
