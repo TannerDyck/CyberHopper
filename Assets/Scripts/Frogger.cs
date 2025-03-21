@@ -11,7 +11,7 @@ public class Frogger : MonoBehaviour
     public Sprite idleSprite;
     public Sprite leapSprite;
     public Sprite deathSprite;
-    
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -53,6 +53,7 @@ public class Frogger : MonoBehaviour
         Collider2D barrier = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Barrier"));
         Collider2D platform = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Platform"));
         Collider2D obstacle = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Obstacle"));
+        Collider2D environment = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Environment"));
 
         if (barrier != null)
         {
@@ -78,6 +79,11 @@ public class Frogger : MonoBehaviour
             transform.position = destination;
             Death();
         }
+        else if (environment != null && platform == null)
+        {
+            transform.position = destination;
+            Death();
+        }
         else
         {
             StartCoroutine(Leap(destination));
@@ -90,11 +96,11 @@ public class Frogger : MonoBehaviour
         Vector3 startPosition = transform.position;
         Vector3 roundedDestination;
 
-        if (transform.parent != null) // If Frogger is on a platform
+        if (transform.parent != null)
         {
             roundedDestination = new Vector3(destination.x, Mathf.Round(destination.y), destination.z);
         }
-        else // If Frogger is not on a platform
+        else
         {
             roundedDestination = new Vector3(Mathf.Round(destination.x), Mathf.Round(destination.y), destination.z);
         }
@@ -145,7 +151,17 @@ public class Frogger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (enabled && other.gameObject.layer == LayerMask.NameToLayer("Barrier") && transform.parent != null)
+        if (!enabled) return;
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("Barrier") && transform.parent != null)
+        {
+            Death();
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+        {
+            Death();
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Environment") && transform.parent == null)
         {
             Death();
         }
