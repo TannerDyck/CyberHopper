@@ -171,7 +171,6 @@ public class Frogger : MonoBehaviour
         // Reset invincibility visuals (just in case)
         spriteRenderer.color = originalColor;
 
-        // 👇 Grant 5 seconds of safety after respawn
         ActivateInvincibility(5f);
     }
 
