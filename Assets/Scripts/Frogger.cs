@@ -25,6 +25,8 @@ public class Frogger : MonoBehaviour
     public Color speedBoostColor = new Color(0f, 1f, 1f, 1f); // Electric blue color
     private float multiplier = 1f;
 
+    private float farthestRow;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -104,6 +106,12 @@ public class Frogger : MonoBehaviour
             transform.SetParent(null);
         }
 
+        if (destination.y > farthestRow)
+        {
+            farthestRow = destination.y;
+            FindObjectOfType<GameManager>().AdvancedRow();
+        }
+
         StartCoroutine(Leap(destination));
     }
 
@@ -156,13 +164,15 @@ public class Frogger : MonoBehaviour
 
         transform.rotation = Quaternion.identity;
         transform.position = spawnPosition;
+        farthestRow = spawnPosition.y;
         spriteRenderer.sprite = idleSprite;
         enabled = true;
 
         // Reset invincibility on respawn
-        if (isInvincible)
+        if (isInvincible || isSpeedBoosted)
         {
             EndInvincibility();
+            EndSpeedBoost();
         }
     }
 
