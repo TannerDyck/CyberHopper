@@ -154,13 +154,18 @@ public class Frogger : MonoBehaviour
         spriteRenderer.sprite = deathSprite;
         enabled = false;
 
-        frogger.linearVelocity = Vector2.zero;
+        if (frogger != null)
+        {
+            frogger.linearVelocity = Vector2.zero;
+        }
         transform.SetParent(null);
+
+        // Reset any active power-ups
+        if (isInvincible) EndInvincibility();
+        if (isSpeedBoosted) EndSpeedBoost();
 
         // Notify GameManager of death
         FindObjectOfType<GameManager>().FroggerDied();
-
-        Invoke(nameof(Respawn), 1f);
     }
 
     public void Respawn()
@@ -184,15 +189,13 @@ public class Frogger : MonoBehaviour
             spriteRenderer.color = originalColor;
         }
 
+        if (frogger != null)
+        {
+            frogger.linearVelocity = Vector2.zero;
+        }
+
         farthestRow = spawnPosition.y;
         enabled = true;
-
-        // Reset power-ups only if they're active
-        if (isInvincible || isSpeedBoosted)
-        {
-            if (isInvincible) EndInvincibility();
-            if (isSpeedBoosted) EndSpeedBoost();
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)

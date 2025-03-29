@@ -3,15 +3,31 @@ using UnityEngine;
 public class Home : MonoBehaviour
 {
     public GameObject frog;
+    private GameManager gameManager;
+
+    private void Start()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager not found!");
+        }
+    }
 
     private void OnEnable()
     {
-        frog.SetActive(true);
+        if (frog != null)
+        {
+            frog.SetActive(true);
+        }
     }
 
     private void OnDisable()
     {
-        frog.SetActive(false);
+        if (frog != null)
+        {
+            frog.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -19,7 +35,15 @@ public class Home : MonoBehaviour
         if (!enabled && other.gameObject.CompareTag("Player"))
         {
             enabled = true;
-            FindObjectOfType<GameManager>().HomeOccupied();
+            if (gameManager != null)
+            {
+                gameManager.HomeOccupied();
+            }
+            else
+            {
+                // Fallback in case gameManager reference is lost
+                FindObjectOfType<GameManager>()?.HomeOccupied();
+            }
         }
     }
 }
