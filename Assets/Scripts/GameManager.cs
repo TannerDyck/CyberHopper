@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,23 +9,30 @@ public class GameManager : MonoBehaviour
     private Home[] homes;
     private int score;
     private int lives;
+    private bool gameOver;
+    private float timeRemaining;
+    private const float ROUND_TIME = 30f;
 
-    private int time;
-
-
-    private void Start()
-    {
-        NewGame();
-    }
+    [Header("UI References")]
+    [SerializeField] private TextMeshProUGUI scoreText;
 
     private void Awake()
     {
         homes = FindObjectsOfType<Home>();
         frogger = FindObjectOfType<Frogger>();
+
+        // Find score text if not assigned
+        if (scoreText == null)
+        {
+            scoreText = GameObject.Find("ScoreText")?.GetComponent<TextMeshProUGUI>();
+        }
+
+        NewGame();
     }
 
     private void NewGame()
     {
+        gameOver = false;
         SetScore(0);
         SetLives(3);
         NewLevel();
@@ -42,29 +51,32 @@ public class GameManager : MonoBehaviour
 
     private void NewRound()
     {
-        frogger.gameObject.SetActive(true);
-        Respawn();
+        if (!gameOver)
+        {
+            StopAllCoroutines();
+            StartCoroutine(TimerCoroutine());
+            frogger.gameObject.SetActive(true);
+            frogger.Respawn();
+        }
     }
 
-    private void Respawn()
+    private IEnumerator TimerCoroutine()
     {
-        frogger.Respawn();
+        timeRemaining = ROUND_TIME;
 
-        StopAllCoroutines();
-        StartCoroutine(Timer(30));
-    }
-
-    private IEnumerator Timer(int duration)
-    {
-        time = duration;
-
-        while (time > 0)
+        while (timeRemaining > 0)
         {
             yield return new WaitForSeconds(1f);
-            time--;
-        }
+            timeRemaining--;
 
-        frogger.Death();
+            // Update UI with timeRemaining here
+
+            if (timeRemaining <= 0)
+            {
+                frogger.Death();
+                break;
+            }
+        }
     }
 
     public void AdvancedRow()
@@ -75,12 +87,15 @@ public class GameManager : MonoBehaviour
     public void HomeOccupied()
     {
         frogger.gameObject.SetActive(false);
+        StopAllCoroutines();
 
-        int bonusPoints = time * 20;
-        SetScore(score + bonusPoints + 50);
+        // Calculate and add time bonus and base points for reaching home
+        int timeBonus = Mathf.RoundToInt(timeRemaining * 20);
+        SetScore(score + timeBonus + 50);
 
         if (Cleared())
         {
+            // Add clearing bonus separately to avoid overwriting previous score
             SetScore(score + 1000);
             Invoke(nameof(NewLevel), 1f);
         }
@@ -88,6 +103,31 @@ public class GameManager : MonoBehaviour
         {
             Invoke(nameof(NewRound), 1f);
         }
+    }
+
+    public void FroggerDied()
+    {
+        StopAllCoroutines();
+        SetLives(lives - 1);
+
+        if (lives > 0)
+        {
+            Invoke(nameof(NewRound), 1f);
+        }
+        else
+        {
+            GameOver();
+        }
+    }
+
+    private void GameOver()
+    {
+        gameOver = true;
+        frogger.gameObject.SetActive(false);
+        StopAllCoroutines();
+
+        // Wait 2 seconds before restarting
+        Invoke(nameof(NewGame), 2f);
     }
 
     private bool Cleared()
@@ -102,12 +142,21 @@ public class GameManager : MonoBehaviour
     private void SetScore(int newScore)
     {
         this.score = newScore;
-        // ... update UI
+        // Update UI score text with leading zeros
+        if (scoreText != null)
+        {
+            scoreText.text = score.ToString("D4");
+        }
     }
 
     private void SetLives(int lives)
     {
         this.lives = lives;
         // ... update UI
+    }
+
+    public float GetTimeRemaining()
+    {
+        return timeRemaining;
     }
 }

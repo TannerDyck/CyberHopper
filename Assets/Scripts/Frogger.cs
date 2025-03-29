@@ -30,10 +30,14 @@ public class Frogger : MonoBehaviour
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        spawnPosition = transform.position;
-        isLeaping = false;
         frogger = GetComponent<Rigidbody2D>();
         originalColor = spriteRenderer.color;
+
+        // Set initial spawn position to bottom center
+        spawnPosition = new Vector3(0f, -6f, 0f);
+        transform.position = spawnPosition;
+        farthestRow = spawnPosition.y;
+        isLeaping = false;
     }
 
     private void Update()
@@ -153,26 +157,41 @@ public class Frogger : MonoBehaviour
         frogger.linearVelocity = Vector2.zero;
         transform.SetParent(null);
 
+        // Notify GameManager of death
+        FindObjectOfType<GameManager>().FroggerDied();
+
         Invoke(nameof(Respawn), 1f);
     }
 
     public void Respawn()
     {
+        if (this == null) return;  // Safety check
+
         Debug.Log($"Respawning at: {spawnPosition}");
         StopAllCoroutines();
         isLeaping = false;
 
-        transform.rotation = Quaternion.identity;
-        transform.position = spawnPosition;
+        if (transform != null)
+        {
+            transform.rotation = Quaternion.identity;
+            transform.position = spawnPosition;
+            transform.SetParent(null);  // Ensure no parent transform is affecting position
+        }
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.sprite = idleSprite;
+            spriteRenderer.color = originalColor;
+        }
+
         farthestRow = spawnPosition.y;
-        spriteRenderer.sprite = idleSprite;
         enabled = true;
 
-        // Reset invincibility on respawn
+        // Reset power-ups only if they're active
         if (isInvincible || isSpeedBoosted)
         {
-            EndInvincibility();
-            EndSpeedBoost();
+            if (isInvincible) EndInvincibility();
+            if (isSpeedBoosted) EndSpeedBoost();
         }
     }
 
