@@ -121,7 +121,7 @@ public class Frogger : MonoBehaviour
         isLeaping = false;
     }
 
-    private void Death()
+    public void Death()
     {
         Debug.Log("Frog died! Respawning...");
         StopAllCoroutines();
@@ -137,7 +137,7 @@ public class Frogger : MonoBehaviour
         Invoke(nameof(Respawn), 1f);
     }
 
-    private void Respawn()
+    public void Respawn()
     {
         Debug.Log($"Respawning at: {spawnPosition}");
         StopAllCoroutines();
