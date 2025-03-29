@@ -69,6 +69,17 @@ public class Frogger : MonoBehaviour
         Collider2D obstacle = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Obstacle"));
         Collider2D environment = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Environment"));
 
+        // Check if destination has a Home component
+        Collider2D[] colliders = Physics2D.OverlapBoxAll(destination, Vector2.zero, 0f);
+        foreach (Collider2D col in colliders)
+        {
+            if (col.GetComponent<Home>() != null)
+            {
+                StartCoroutine(Leap(destination));
+                return;
+            }
+        }
+
         // If we're not invincible, check for collisions and validate movement
         if (!isInvincible)
         {
@@ -161,6 +172,9 @@ public class Frogger : MonoBehaviour
 
         // Don't die if invincible
         if (isInvincible) return;
+
+        // Check if it's a home first
+        if (other.GetComponent<Home>() != null) return;
 
         // Handle death when colliding with barriers, obstacles, or environment
         if (other.gameObject.layer == LayerMask.NameToLayer("Barrier") && transform.parent != null)

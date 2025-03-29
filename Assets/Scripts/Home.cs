@@ -16,10 +16,15 @@ public class Home : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.tag == "Player")
+        if(other.CompareTag("Player"))
         {
             enabled = true;
+            // Get the Frogger component and call Respawn
+            Frogger frogger = other.GetComponent<Frogger>();
+            if (frogger != null)
+            {
+                frogger.Respawn();
+            }
         }
     }
-
 }
