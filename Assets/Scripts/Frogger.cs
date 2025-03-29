@@ -18,6 +18,13 @@ public class Frogger : MonoBehaviour
     public Color invincibilityColor = new Color(1f, 1f, 0.5f, 0.8f); // Yellow tint
     private Color originalColor;
 
+    // Speed Boost variables
+    private bool isSpeedBoosted = false;
+    private float normalSpeed = 5f; // Normal speed
+    private float currentSpeed = 5f;
+
+    private float multiplier = 1f;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -62,20 +69,13 @@ public class Frogger : MonoBehaviour
         Collider2D obstacle = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Obstacle"));
         Collider2D environment = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Environment"));
 
-        if (barrier != null)
+        // Check for collisions and validate movement
+        if (barrier != null || obstacle != null || (environment != null && platform == null))
         {
-            if (transform.parent != null)
+            // Only call death if not invincible
+            if (!isInvincible)
             {
-                transform.SetParent(null);
-                if (!isInvincible)
-                {
-                    Death();
-                }
-                else
-                {
-                    // Allow movement through barriers when invincible
-                    StartCoroutine(Leap(destination));
-                }
+                Death();
             }
             return;
         }
@@ -89,41 +89,16 @@ public class Frogger : MonoBehaviour
             transform.SetParent(null);
         }
 
-        // Only die if not invincible
-        if (!isInvincible)
-        {
-            if (obstacle != null && platform == null)
-            {
-                transform.position = destination;
-                Death();
-                return;
-            }
-            else if (environment != null && platform == null)
-            {
-                transform.position = destination;
-                Death();
-                return;
-            }
-        }
-
-        // If we reach here, the move is valid or we're invincible
+        // If we're invincible, allow through barriers and obstacles
         StartCoroutine(Leap(destination));
     }
 
     private IEnumerator Leap(Vector3 destination)
     {
+        Debug.Log($"Leaping to: {destination}");
         isLeaping = true;
         Vector3 startPosition = transform.position;
-        Vector3 roundedDestination;
-
-        if (transform.parent != null)
-        {
-            roundedDestination = new Vector3(destination.x, Mathf.Round(destination.y), destination.z);
-        }
-        else
-        {
-            roundedDestination = new Vector3(Mathf.Round(destination.x), Mathf.Round(destination.y), destination.z);
-        }
+        Vector3 roundedDestination = new Vector3(Mathf.Round(destination.x), Mathf.Round(destination.y), destination.z);
 
         float elapsed = 0f;
         float duration = 0.125f;
@@ -132,7 +107,7 @@ public class Frogger : MonoBehaviour
 
         while (elapsed < duration)
         {
-            float t = elapsed / duration;
+            float t = elapsed / duration * multiplier; // reduce the leap time to simulate faster speed
             transform.position = Vector3.Lerp(startPosition, roundedDestination, t);
             elapsed += Time.deltaTime;
             yield return null;
@@ -145,6 +120,7 @@ public class Frogger : MonoBehaviour
 
     private void Death()
     {
+        Debug.Log("Frog died! Respawning...");
         StopAllCoroutines();
         isLeaping = false;
 
@@ -160,6 +136,7 @@ public class Frogger : MonoBehaviour
 
     private void Respawn()
     {
+        Debug.Log($"Respawning at: {spawnPosition}");
         StopAllCoroutines();
         isLeaping = false;
 
@@ -168,7 +145,6 @@ public class Frogger : MonoBehaviour
         spriteRenderer.sprite = idleSprite;
         enabled = true;
 
-        // Reset invincibility visuals (just in case)
         spriteRenderer.color = originalColor;
 
         ActivateInvincibility(5f);
@@ -178,9 +154,10 @@ public class Frogger : MonoBehaviour
     {
         if (!enabled) return;
 
-        // If invincible, don't die from collisions
+        // Don't die if invincible
         if (isInvincible) return;
 
+        // Handle death when colliding with barriers, obstacles, or environment
         if (other.gameObject.layer == LayerMask.NameToLayer("Barrier") && transform.parent != null)
         {
             Death();
@@ -198,27 +175,18 @@ public class Frogger : MonoBehaviour
     // Method to make the frog invincible
     public void ActivateInvincibility(float duration = 0f)
     {
-        // Use default duration if none provided
-        if (duration <= 0f)
-        {
-            duration = invincibilityDuration;
-        }
+        if (duration <= 0f) duration = invincibilityDuration;
 
-        // If already invincible, just reset the timer
         if (isInvincible)
         {
             CancelInvoke(nameof(EndInvincibility));
         }
 
         isInvincible = true;
-
-        // Visual indicator for invincibility
         spriteRenderer.color = invincibilityColor;
 
-        // Flash effect to show invincibility
         StartCoroutine(FlashEffect(duration));
 
-        // Set timer to end invincibility
         Invoke(nameof(EndInvincibility), duration);
     }
 
@@ -229,15 +197,34 @@ public class Frogger : MonoBehaviour
         spriteRenderer.color = originalColor;
     }
 
-    // Create a flashing effect to indicate invincibility
+    // Speed Boost Method
+    public void ActivateSpeedBoost(float multiplier, float duration)
+    {
+        if (isSpeedBoosted)
+        {
+            CancelInvoke(nameof(EndSpeedBoost));
+        }
+
+        this.multiplier = multiplier; // ✅ Use the passed multiplier
+        isSpeedBoosted = true;
+    
+        Invoke(nameof(EndSpeedBoost), duration);
+    }
+
+    private void EndSpeedBoost()
+    {
+        isSpeedBoosted = false;
+        currentSpeed = normalSpeed;
+        multiplier = 1f;
+    }
+
     private IEnumerator FlashEffect(float duration)
     {
         float endTime = Time.time + duration;
-        float flashRate = 0.2f; // How fast to flash
+        float flashRate = 0.2f;
 
         while (Time.time < endTime)
         {
-            // Toggle between invincibility color and half-transparent
             if (spriteRenderer.color.a > 0.5f)
             {
                 spriteRenderer.color = new Color(invincibilityColor.r, invincibilityColor.g, invincibilityColor.b, 0.5f);
@@ -250,7 +237,6 @@ public class Frogger : MonoBehaviour
             yield return new WaitForSeconds(flashRate);
         }
 
-        // Ensure color is reset at the end
         spriteRenderer.color = originalColor;
     }
 }
