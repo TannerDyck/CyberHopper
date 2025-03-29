@@ -168,11 +168,11 @@ public class Frogger : MonoBehaviour
         spriteRenderer.sprite = idleSprite;
         enabled = true;
 
-        // Make sure invincibility is reset on respawn
-        if (isInvincible)
-        {
-            EndInvincibility();
-        }
+        // Reset invincibility visuals (just in case)
+        spriteRenderer.color = originalColor;
+
+        // 👇 Grant 5 seconds of safety after respawn
+        ActivateInvincibility(5f);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
