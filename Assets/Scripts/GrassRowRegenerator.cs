@@ -9,15 +9,19 @@ public class GrassRowRegenerator : MonoBehaviour
     public GameObject[] carPrefabs;
     public GameObject waterPrefab;
     public GameObject[] logPrefabs;
+    public GameObject[] turtlePrefabs;
 
     public int initialBottomRow = -6;
     public int totalRows = 16;
     public float tileHeight = 1f;
     public int triggerRowIndex = 2; 
+    private int consecutiveWaterRows = 0;
+
 
     private List<GameObject> activeRows = new List<GameObject>();
     private int topRowIndex;
     private int lastLogPrefabIndex = -1;
+    private float lastLogSpeed = 0f;
 
     void Start()
     {
@@ -46,20 +50,46 @@ public class GrassRowRegenerator : MonoBehaviour
     void SpawnRow(int rowIndex, int? forceType = null)
     {
         Vector3 position = new Vector3(0, rowIndex * tileHeight, 0);
-        int type = forceType.HasValue ? forceType.Value : Random.Range(0, 3);
+
+        int type;
+        if (forceType.HasValue)
+        {
+            type = forceType.Value;
+        }
+        else
+        {
+            // Logic to limit water rows to max 2 in a row
+            List<int> validTypes = new List<int> { 0, 1, 2 }; // grass, road, water
+            if (consecutiveWaterRows >= 2)
+            {
+                validTypes.Remove(2); // Remove water
+            }
+
+            type = validTypes[Random.Range(0, validTypes.Count)];
+        }
+
+        // Instantiate row
         GameObject prefabToSpawn = type == 0 ? grassPrefab : type == 1 ? roadPrefab : waterPrefab;
         GameObject row = Instantiate(prefabToSpawn, position, Quaternion.identity, transform);
         activeRows.Add(row);
 
+        // Handle row content
         if (prefabToSpawn == roadPrefab)
         {
             SpawnCarsOnRoad(row.transform);
+            consecutiveWaterRows = 0;
         }
         else if (prefabToSpawn == waterPrefab)
         {
             SpawnLogsOnWater(row.transform);
+            consecutiveWaterRows++;
+        }
+        else
+        {
+            consecutiveWaterRows = 0;
         }
     }
+
 
 
 
@@ -75,51 +105,78 @@ public class GrassRowRegenerator : MonoBehaviour
     }
 
 
-    void SpawnLogsOnWater(Transform waterParent)
+  void SpawnLogsOnWater(Transform waterParent)
     {
+        // 🐢 Decide whether to spawn logs or turtles
+        bool spawnTurtles = Random.value < 0.5f;
 
-        int newLogIndex;
-        if (logPrefabs.Length == 1)
+        GameObject[] prefabPool = spawnTurtles ? turtlePrefabs : logPrefabs;
+
+        // 🔁 Choose a different prefab than the last one
+        int newPrefabIndex;
+        if (prefabPool.Length == 1)
         {
-            newLogIndex = 0;
+            newPrefabIndex = 0;
         }
         else
         {
             do
             {
-                newLogIndex = Random.Range(0, logPrefabs.Length);
-            } while (newLogIndex == lastLogPrefabIndex);
+                newPrefabIndex = Random.Range(0, prefabPool.Length);
+            } while (newPrefabIndex == lastLogPrefabIndex);
         }
 
-        lastLogPrefabIndex = newLogIndex;
-        GameObject selectedLogPrefab = logPrefabs[newLogIndex];
+        lastLogPrefabIndex = newPrefabIndex;
+        GameObject selectedPrefab = prefabPool[newPrefabIndex];
 
-        float[] laneOffsets = { -6f, -3f, 0f, 3f, 6f };
-        int numLogs = Random.Range(2, Mathf.Min(4, laneOffsets.Length + 1));
+        // Direction: logs go left ➡️, turtles go right ⬅️
+        float direction = spawnTurtles ? -1f : 1f;
 
-        float speed = Random.Range(0.8f, 1.2f) * (Random.value < 0.5f ? 1 : -1);
-
-        List<float> availableOffsets = new List<float>(laneOffsets);
-
-        for (int i = 0; i < numLogs; i++)
+        // Pick speed, avoiding being too similar to last
+        float speed;
+        float baseSpeed;
+        int maxAttempts = 10;
+        int attempts = 0;
+        do
         {
-            int laneIndex = Random.Range(0, availableOffsets.Count);
-            float laneX = availableOffsets[laneIndex];
-            availableOffsets.RemoveAt(laneIndex);
+            baseSpeed = Random.Range(1f, 2f); // Decent consistent speed range
+            speed = baseSpeed * direction;
+            attempts++;
+        } 
+        while ((Mathf.Abs(speed - lastLogSpeed) < 1.0f || Mathf.Sign(speed) == Mathf.Sign(lastLogSpeed)) && attempts < maxAttempts);
 
-            Vector3 logPosition = new Vector3(laneX, waterParent.position.y, 0f);
-            GameObject log = Instantiate(selectedLogPrefab, logPosition, Quaternion.identity);
-            log.transform.SetParent(waterParent);
 
-            LogMover mover = log.GetComponent<LogMover>();
+
+        lastLogSpeed = speed;
+
+        // Set spawn start based on direction
+        float startX = direction > 0 ? -12f : 12f;
+        float y = waterParent.position.y;
+
+        int objectCount = 4;
+        float spacing = 5f;
+
+        for (int i = 0; i < objectCount; i++)
+        {
+            float offset = i * spacing * -direction;
+            Vector3 spawnPosition = new Vector3(startX + offset, y, 0f);
+
+            GameObject obj = Instantiate(selectedPrefab, spawnPosition, Quaternion.identity);
+            obj.transform.SetParent(waterParent);
+
+            LogMover mover = obj.GetComponent<LogMover>();
             if (mover == null)
             {
-                mover = log.AddComponent<LogMover>();
+                mover = obj.AddComponent<LogMover>();
             }
 
             mover.speed = speed;
         }
     }
+
+
+
+
 
 
     void ShiftEnvironmentDown()
