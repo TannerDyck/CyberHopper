@@ -14,7 +14,14 @@ public class PowerUp : MonoBehaviour
     private PowerUpManager manager;
     private bool isCollected = false;
 
-    // 🔹 Fix: Add this missing method
+    private void Start()
+    {
+        if (manager == null)
+        {
+            manager = FindObjectOfType<PowerUpManager>();
+        }
+    }
+
     public void SetManager(PowerUpManager manager)
     {
         this.manager = manager;
@@ -27,6 +34,10 @@ public class PowerUp : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isCollected = true;
+
+            // Play powerup collect sound
+            AudioManager.instance.PlaySFX("PowerUp Collect");
+
             ApplyPowerUpEffect(other.gameObject);
 
             if (collectEffect != null)
@@ -34,19 +45,32 @@ public class PowerUp : MonoBehaviour
                 Instantiate(collectEffect, transform.position, Quaternion.identity);
             }
 
-            PowerUpManager managerRef = this.manager ?? FindAnyObjectByType<PowerUpManager>();
-            Destroy(gameObject);
-
-            if (managerRef != null)
-                managerRef.OnPowerUpCollected();
+            if (manager != null)
+            {
+                manager.OnPowerUpCollected();
+            }
             else
-                Debug.LogWarning("No PowerUpManager found!");
+            {
+                // Fallback in case manager reference is lost
+                PowerUpManager managerRef = FindObjectOfType<PowerUpManager>();
+                if (managerRef != null)
+                {
+                    managerRef.OnPowerUpCollected();
+                }
+                else
+                {
+                    Debug.LogWarning("No PowerUpManager found!");
+                }
+            }
+
+            Destroy(gameObject);
         }
     }
 
-    public void ApplyPowerUpEffect(GameObject player)
+    private void ApplyPowerUpEffect(GameObject player)
     {
-        Debug.Log("ApplyPowerUpEffect called for " + player.name);
+        if (player == null) return;
+
         Frogger frogController = player.GetComponent<Frogger>();
         if (frogController == null)
         {
@@ -57,16 +81,12 @@ public class PowerUp : MonoBehaviour
         if (isInvincibilityPowerUp)
         {
             frogController.ActivateInvincibility(duration);
-            Debug.Log("Invincibility activated for " + duration + " seconds!");
+            Debug.Log($"Invincibility activated for {duration} seconds!");
         }
         else if (isSpeedBoostPowerUp)
         {
             frogController.ActivateSpeedBoost(speedMultiplier, duration);
-            Debug.Log("Speed Boost activated! Multiplier: " + speedMultiplier);
-        }
-        if (manager != null)
-        {
-            manager.OnPowerUpCollected();
+            Debug.Log($"Speed Boost activated! Multiplier: {speedMultiplier}");
         }
     }
 }
