@@ -8,7 +8,7 @@ public class LogMover : MonoBehaviour
     {
         transform.Translate(Vector3.right * speed * Time.deltaTime);
 
-        // Destroy if too far off screen
+
         if (Mathf.Abs(transform.position.x) > 20f)
         {
             Destroy(gameObject);

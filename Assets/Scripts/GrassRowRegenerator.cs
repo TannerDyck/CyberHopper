@@ -58,22 +58,22 @@ public class GrassRowRegenerator : MonoBehaviour
         }
         else
         {
-            // Logic to limit water rows to max 2 in a row
-            List<int> validTypes = new List<int> { 0, 1, 2 }; // grass, road, water
+  
+            List<int> validTypes = new List<int> { 0, 1, 2 }; 
             if (consecutiveWaterRows >= 2)
             {
-                validTypes.Remove(2); // Remove water
+                validTypes.Remove(2); 
             }
 
             type = validTypes[Random.Range(0, validTypes.Count)];
         }
 
-        // Instantiate row
+
         GameObject prefabToSpawn = type == 0 ? grassPrefab : type == 1 ? roadPrefab : waterPrefab;
         GameObject row = Instantiate(prefabToSpawn, position, Quaternion.identity, transform);
         activeRows.Add(row);
 
-        // Handle row content
+
         if (prefabToSpawn == roadPrefab)
         {
             SpawnCarsOnRoad(row.transform);
@@ -107,12 +107,12 @@ public class GrassRowRegenerator : MonoBehaviour
 
   void SpawnLogsOnWater(Transform waterParent)
     {
-        // 🐢 Decide whether to spawn logs or turtles
+
         bool spawnTurtles = Random.value < 0.5f;
 
         GameObject[] prefabPool = spawnTurtles ? turtlePrefabs : logPrefabs;
 
-        // 🔁 Choose a different prefab than the last one
+
         int newPrefabIndex;
         if (prefabPool.Length == 1)
         {
@@ -129,17 +129,17 @@ public class GrassRowRegenerator : MonoBehaviour
         lastLogPrefabIndex = newPrefabIndex;
         GameObject selectedPrefab = prefabPool[newPrefabIndex];
 
-        // Direction: logs go left ➡️, turtles go right ⬅️
+
         float direction = spawnTurtles ? -1f : 1f;
 
-        // Pick speed, avoiding being too similar to last
+   
         float speed;
         float baseSpeed;
         int maxAttempts = 10;
         int attempts = 0;
         do
         {
-            baseSpeed = Random.Range(1f, 2f); // Decent consistent speed range
+            baseSpeed = Random.Range(1f, 2f); 
             speed = baseSpeed * direction;
             attempts++;
         } 
@@ -149,7 +149,7 @@ public class GrassRowRegenerator : MonoBehaviour
 
         lastLogSpeed = speed;
 
-        // Set spawn start based on direction
+
         float startX = direction > 0 ? -12f : 12f;
         float y = waterParent.position.y;
 
