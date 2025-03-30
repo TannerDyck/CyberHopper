@@ -15,16 +15,26 @@ public class GameManager : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI livesText;
+    [SerializeField] private TextMeshProUGUI timerText;
 
     private void Awake()
     {
         homes = FindObjectsOfType<Home>();
         frogger = FindObjectOfType<Frogger>();
 
-        // Find score text if not assigned
+        // Find UI text components if not assigned
         if (scoreText == null)
         {
             scoreText = GameObject.Find("ScoreText")?.GetComponent<TextMeshProUGUI>();
+        }
+        if (livesText == null)
+        {
+            livesText = GameObject.Find("LivesText")?.GetComponent<TextMeshProUGUI>();
+        }
+        if (timerText == null)
+        {
+            timerText = GameObject.Find("TimerText")?.GetComponent<TextMeshProUGUI>();
         }
 
         NewGame();
@@ -66,10 +76,14 @@ public class GameManager : MonoBehaviour
 
         while (timeRemaining > 0)
         {
+            // Update UI timer text
+            if (timerText != null)
+            {
+                timerText.text = Mathf.CeilToInt(timeRemaining).ToString();
+            }
+
             yield return new WaitForSeconds(1f);
             timeRemaining--;
-
-            // Update UI with timeRemaining here
 
             if (timeRemaining <= 0)
             {
@@ -152,7 +166,11 @@ public class GameManager : MonoBehaviour
     private void SetLives(int lives)
     {
         this.lives = lives;
-        // ... update UI
+        // Update UI lives text
+        if (livesText != null)
+        {
+            livesText.text = lives.ToString();
+        }
     }
 
     public float GetTimeRemaining()
