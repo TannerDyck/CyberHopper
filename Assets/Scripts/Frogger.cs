@@ -126,6 +126,9 @@ public class Frogger : MonoBehaviour
         Vector3 startPosition = transform.position;
         Vector3 roundedDestination = new Vector3(Mathf.Round(destination.x), Mathf.Round(destination.y), destination.z);
 
+        // Play jump sound
+        AudioManager.instance.PlaySFX("Frog Jump");
+
         float elapsed = 0f;
         float duration = 0.125f;
 
@@ -149,6 +152,9 @@ public class Frogger : MonoBehaviour
         Debug.Log("Frog died! Respawning...");
         StopAllCoroutines();
         isLeaping = false;
+
+        // Play death sound
+        AudioManager.instance.PlaySFX("Frog Death");
 
         transform.rotation = Quaternion.identity;
         spriteRenderer.sprite = deathSprite;
@@ -206,7 +212,12 @@ public class Frogger : MonoBehaviour
         if (isInvincible) return;
 
         // Check if it's a home first
-        if (other.GetComponent<Home>() != null) return;
+        if (other.GetComponent<Home>() != null)
+        {
+            // Play home success sound
+            AudioManager.instance.PlaySFX("Frog Home");
+            return;
+        }
 
         // Handle death when colliding with barriers, obstacles, or environment
         if (other.gameObject.layer == LayerMask.NameToLayer("Barrier") && transform.parent != null)

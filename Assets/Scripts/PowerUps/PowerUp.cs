@@ -34,6 +34,10 @@ public class PowerUp : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isCollected = true;
+
+            // Play powerup collect sound
+            AudioManager.instance.PlaySFX("PowerUp Collect");
+
             ApplyPowerUpEffect(other.gameObject);
 
             if (collectEffect != null)
