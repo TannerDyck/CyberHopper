@@ -89,6 +89,9 @@ public class Frogger : MonoBehaviour
             transform.SetParent(null);
         }
 
+        // Play jump sound
+        AudioManager.instance.PlaySFX("Frog Jump");
+
         // If we're invincible, allow through barriers and obstacles
         StartCoroutine(Leap(destination));
     }
@@ -127,6 +130,9 @@ public class Frogger : MonoBehaviour
         transform.rotation = Quaternion.identity;
         spriteRenderer.sprite = deathSprite;
         enabled = false;
+
+        // Play death sound
+        AudioManager.instance.PlaySFX("Frog Death");
 
         frogger.linearVelocity = Vector2.zero;
         transform.SetParent(null);
@@ -207,7 +213,10 @@ public class Frogger : MonoBehaviour
 
         this.multiplier = multiplier; // ✅ Use the passed multiplier
         isSpeedBoosted = true;
-    
+
+        // Play powerup sound
+        AudioManager.instance.PlaySFX("PowerUp Collect");
+
         Invoke(nameof(EndSpeedBoost), duration);
     }
 
