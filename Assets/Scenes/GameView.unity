@@ -632,7 +632,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 232}
+  m_AnchoredPosition: {x: 0, y: 382}
   m_SizeDelta: {x: 134, y: 11}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &100447685
@@ -3998,7 +3998,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 191, y: 224}
+  m_SizeDelta: {x: 191, y: 374}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &954162854
 MonoBehaviour:
@@ -5071,8 +5071,8 @@ MonoBehaviour:
   idleSprite: {fileID: 21300000, guid: accdfca821fcfad4aa0e79fe4138f7df, type: 3}
   leapSprite: {fileID: 21300000, guid: c032d92b984378d4ebe60f300734cb08, type: 3}
   deathSprite: {fileID: 21300000, guid: 1695d102dbd9a5949a838586c2e47c81, type: 3}
-  invincibilityColor: {r: 1, g: 1, b: 0.5, a: 0.8}
-  speedBoostColor: {r: 0, g: 1, b: 1, a: 1}
+  invincibilityColor: {r: 0.3254717, g: 0.8148353, b: 1, a: 0.8627451}
+  speedBoostColor: {r: 1, g: 0.98060095, b: 0, a: 1}
 --- !u!50 &1134451882
 Rigidbody2D:
   serializedVersion: 5
@@ -5564,7 +5564,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 8}
-  m_SizeDelta: {x: 175, y: 140}
+  m_SizeDelta: {x: 175, y: 290}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1229288150
 MonoBehaviour:
@@ -5587,9 +5587,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "Help Frogger cross the road!\n\nAvoid obstacles, collect helpful power-ups,
-    and maximize your score as you progress forwards for as long as possible.\n\nHop
-    to the next tile:\t  5 pts\nCollect Power-Up:\t\t25 pts\nEnter a New Biome:\t30
-    pts "
+    and hop Frogger into all 5 home bays before your time runs out!\n\nIf time runs
+    out before Frogger makes it to a new home, he will lose one of his 3 lives and
+    have to restart his journey!\n\nPOINT ALLOCATIONS:\n\nHop to the next tile:\t 
+    10 pts\n\nSend Frogger Home:\t  50 pts\n+ Bonus (Remaining Time x 20)\n\nLevel
+    Completion: \t        1000 pts"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
