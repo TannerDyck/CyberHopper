@@ -3649,10 +3649,10 @@ MonoBehaviour:
   - {fileID: 2275421134873943812, guid: b696e173833da2144b61a9ac238b6e3d, type: 3}
   respawnDelay: 5
   powerUpDuration: 5
-  minX: -7.5
-  maxX: 7.5
-  minY: -6.5
-  maxY: 7.5
+  minX: -7
+  maxX: 7
+  minY: -6
+  maxY: 5
   prefabValid: 1
   prefabName: Powerup
 --- !u!4 &910334552
