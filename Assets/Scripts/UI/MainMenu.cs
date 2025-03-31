@@ -1,10 +1,12 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public void PlayGame() 
+    public MenuWipeController wipeTransition;
+
+    public void PlayGame()
     {
-        SceneManager.LoadSceneAsync(1);
+        wipeTransition.StartWipe(); // Start the wipe animation
     }
 }
+
