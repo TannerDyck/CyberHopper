@@ -1439,7 +1439,7 @@ BoxCollider2D:
     drawMode: 2
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 16, y: 5}
+  m_Size: {x: 16, y: 7}
   m_EdgeRadius: 0
 --- !u!1001 &244201005
 PrefabInstance:

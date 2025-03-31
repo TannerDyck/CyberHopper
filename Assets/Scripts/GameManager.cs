@@ -137,11 +137,17 @@ public class GameManager : MonoBehaviour
     private void GameOver()
     {
         gameOver = true;
-        frogger.gameObject.SetActive(false);
         StopAllCoroutines();
 
-        // Wait 2 seconds before restarting
-        Invoke(nameof(NewGame), 2f);
+        // Wait 1 second to show death sprite before deactivating Frogger
+        Invoke(nameof(DeactivateFrogger), 1f);
+    }
+
+    private void DeactivateFrogger()
+    {
+        frogger.gameObject.SetActive(false);
+        // Wait 1 more second before restarting
+        Invoke(nameof(NewGame), 1f);
     }
 
     private bool Cleared()
