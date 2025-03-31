@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI livesText;
     [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private GameObject youWinPanel;
 
     private void Awake()
     {
@@ -36,6 +38,33 @@ public class GameManager : MonoBehaviour
         {
             timerText = GameObject.Find("TimerText")?.GetComponent<TextMeshProUGUI>();
         }
+        if (gameOverPanel == null)
+        {
+            gameOverPanel = GameObject.Find("GameOverPanel");
+        }
+        if (youWinPanel == null)
+        {
+            youWinPanel = GameObject.Find("YouWinPanel");
+        }
+
+        // Ensure panels exist and set initial visibility
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("GameOverPanel not found in the scene!");
+        }
+
+        if (youWinPanel != null)
+        {
+            youWinPanel.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("YouWinPanel not found in the scene!");
+        }
 
         NewGame();
     }
@@ -45,6 +74,12 @@ public class GameManager : MonoBehaviour
         gameOver = false;
         SetScore(0);
         SetLives(3);
+        Time.timeScale = 1;
+
+        // Ensure panels are hidden when starting new game
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
+        if (youWinPanel != null) youWinPanel.SetActive(false);
+
         NewLevel();
     }
 
@@ -111,7 +146,10 @@ public class GameManager : MonoBehaviour
         {
             // Add clearing bonus separately to avoid overwriting previous score
             SetScore(score + 1000);
-            Invoke(nameof(NewLevel), 1f);
+            // Show win panel and stop the game
+            if (youWinPanel != null) youWinPanel.SetActive(true);
+            gameOver = true; // Prevent further game updates
+            Time.timeScale = 0; // Pause the game
         }
         else
         {
@@ -139,15 +177,10 @@ public class GameManager : MonoBehaviour
         gameOver = true;
         StopAllCoroutines();
 
-        // Wait 1 second to show death sprite before deactivating Frogger
-        Invoke(nameof(DeactivateFrogger), 1f);
-    }
-
-    private void DeactivateFrogger()
-    {
+        // Show game over panel
+        if (gameOverPanel != null) gameOverPanel.SetActive(true);
         frogger.gameObject.SetActive(false);
-        // Wait 1 more second before restarting
-        Invoke(nameof(NewGame), 1f);
+        Time.timeScale = 0; // Pause the game
     }
 
     private bool Cleared()
