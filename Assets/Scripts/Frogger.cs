@@ -14,7 +14,7 @@ public class Frogger : MonoBehaviour
 
     // Invincibility variables
     private bool isInvincible = false;
-    private float invincibilityDuration = 5f; // Duration in seconds
+    private float invincibilityDuration = 3f; // Duration in seconds
     public Color invincibilityColor = Color.white; // Changed to white for better visibility
     private Color originalColor;
 
