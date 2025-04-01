@@ -3645,8 +3645,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerUpPrefabs:
-  - {fileID: 1136101363554962704, guid: e066c556fb7d8f04ea1ff077148f7e19, type: 3}
-  - {fileID: 2275421134873943812, guid: b696e173833da2144b61a9ac238b6e3d, type: 3}
+  - {fileID: 7758470774804028869, guid: a74ad6686f931d9409ed98021dabb221, type: 3}
+  - {fileID: 3808776969342680761, guid: 7c0d9138785467a49bc2080c115c837b, type: 3}
   respawnDelay: 5
   powerUpDuration: 5
   minX: -7
