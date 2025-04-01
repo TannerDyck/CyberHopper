@@ -1,4 +1,4 @@
-# CyberHopper
+![](Assets/Sprites/UI/CyberHopper.png)
 
 Created for the Retro Twist Game Jam, CyberHopper is a cyberified take on the classic Frogger game. The twist? We added modern visuals and exciting power-ups to the retro gameplay! Guide your cyber-frog across hazardous traffic and treacherous platforms to reach the safety of the home pads.
 
