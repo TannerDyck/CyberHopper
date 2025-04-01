@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject youWinPanel;
+    [SerializeField] private TextMeshProUGUI gameOverScoreText;
 
     private void Awake()
     {
@@ -179,6 +180,11 @@ public class GameManager : MonoBehaviour
 
         // Show game over panel
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
+
+        if (gameOverScoreText != null) {
+            gameOverScoreText.text = "" + score.ToString("D4");
+        }
+
         frogger.gameObject.SetActive(false);
         Time.timeScale = 0; // Pause the game
     }
