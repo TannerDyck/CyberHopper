@@ -35,3 +35,8 @@ Collect these special items to gain an advantage:
 *   The game ends when you run out of lives.
 
 ## Video Demo
+<a href="https://youtu.be/lIKwja8sE-4" target="_blank">
+ <img src="https://i9.ytimg.com/vi/lIKwja8sE-4/mqdefault.jpg?sqp=CKDcrb8G-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYACsAWKAgwIABABGDUgZSg7MA8=&rs=AOn4CLDkeZBoA6dbOwhT2mgbWVEBOGyJKg" alt="Video Demo Thumbnail" width="600">
+</a>
+<br>
+<em>Click thumbnail to watch video on YouTube</em>
