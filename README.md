@@ -39,4 +39,10 @@ Collect these special items to gain an advantage:
  <img src="https://i9.ytimg.com/vi/lIKwja8sE-4/mqdefault.jpg?sqp=CKDcrb8G-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYACsAWKAgwIABABGDUgZSg7MA8=&rs=AOn4CLDkeZBoA6dbOwhT2mgbWVEBOGyJKg" alt="Video Demo Thumbnail" width="600">
 </a>
 <br>
+
+## Removed Feature
+[Watch the demo video on YouTube](https://youtu.be/zIsGdWzyAk4)
+*   Due to time contraints and emphasis on solid gamplay we decided to remove the endless mode feature.
+
+
 <em>Click thumbnail to watch video on YouTube</em>
